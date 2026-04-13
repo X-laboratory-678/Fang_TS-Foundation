@@ -1,4 +1,5 @@
 # Fang_TS-Foundation
+A general large language model capable of hybrid forecasting.
 
 <div align="center">
 
@@ -8,7 +9,6 @@
 
 </div>
 
-A general large language model capable of hybrid forecasting.
 
 ## Overview
 
