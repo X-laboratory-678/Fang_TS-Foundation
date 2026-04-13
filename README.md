@@ -1,19 +1,6 @@
 # Fang_TS-Foundation
 A general large language model capable of hybrid forecasting.
-可以，先给你一版**适合直接放到 GitHub 的 README 初稿**。我这版核心围绕你当前论文主线来写：**统一跨领域时序预测、混合域 SFT、任务敏感快速适应、时间感知动态正则化、目标域 DPO 对齐**。这些表述与你前面已经明确的论文主线一致：统一接口、多领域混合训练、元学习式快速适应、动态正则化，以及“先广度后深度”的单域 DPO 优化。
 
-你可以直接复制下面内容作为 `README.md` 使用。
-
-````markdown
-# TS-Foundation: A Unified Large Language Model Framework for Cross-Domain Time-Series Forecasting
-
-<div align="center">
-
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
-
-</div>
 
 ## Overview
 
