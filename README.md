@@ -1,4 +1,5 @@
-# TS-Foundation:A general large language model capable of hybrid forecasting.
+# TS-Foundation:
+# A general large language model capable of hybrid forecasting.
 
 <div align="center">
 
