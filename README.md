@@ -1,5 +1,5 @@
 # TS-Foundation
-A general large language model capable of hybrid forecasting.
+A unified large language model framework for cross-domain hybrid time-series forecasting.
 
 <div align="center">
 
@@ -140,7 +140,7 @@ TS-Foundation/
 ## Installation
 
 ```bash
-git clone https://github.com/yourname/TS-Foundation.git
+git clone https://github.com/X-laboratory-678/Fang_TS-Foundation.git
 cd TS-Foundation
 pip install -r requirements.txt
 ```
