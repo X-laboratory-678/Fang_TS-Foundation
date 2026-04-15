@@ -189,9 +189,9 @@ python evaluate.py \
 If you find this repository useful in your research, please cite:
 
 ```bibtex
-@article{yourname2026tsfoundation,
+@article{Fangxin2026tsfoundation,
   title={TS-Foundation: A Unified Large Language Model Framework for Cross-Domain Time-Series Forecasting},
-  author={Your Name and Coauthors},
+  author={FangXin},
   journal={Under Review},
   year={2026}
 }
