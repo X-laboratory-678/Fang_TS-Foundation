@@ -1,0 +1,13 @@
+[
+  {
+    "instruction": "As an energy demand forecaster, use a history window of 12 hourly values to predict the next 3 values. Return only a numeric list rounded to two decimals.",
+    "input": "[51.20, 52.10, 53.00, 53.80, 54.60, 55.50, 56.30, 57.10, 58.00, 58.90, 59.70, 60.50]",
+    "output": "[61.30, 62.10, 62.90]"
+  },
+  {
+    "instruction": "As an energy demand forecaster, use a history window of 12 hourly values to predict the next 3 values. Return only a numeric list rounded to two decimals.",
+    "input": "[48.00, 48.40, 49.10, 49.90, 50.80, 51.30, 52.00, 52.60, 53.40, 54.10, 54.80, 55.40]",
+    "output": "[56.10, 56.70, 57.30]"
+  }
+]
+

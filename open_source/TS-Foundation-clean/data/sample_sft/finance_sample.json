@@ -1,0 +1,13 @@
+[
+  {
+    "instruction": "As a finance forecaster, use a history window of 12 daily closing prices to predict the next 3 prices. Return only a numeric list rounded to two decimals.",
+    "input": "[101.20, 101.85, 102.10, 102.75, 103.40, 103.10, 104.00, 104.55, 105.20, 105.95, 106.10, 106.80]",
+    "output": "[107.35, 107.90, 108.45]"
+  },
+  {
+    "instruction": "As a finance forecaster, use a history window of 12 daily closing prices to predict the next 3 prices. Return only a numeric list rounded to two decimals.",
+    "input": "[88.50, 88.90, 89.15, 89.80, 90.25, 90.70, 91.10, 91.55, 91.90, 92.35, 92.80, 93.20]",
+    "output": "[93.65, 94.00, 94.35]"
+  }
+]
+

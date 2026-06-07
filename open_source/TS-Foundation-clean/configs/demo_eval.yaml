@@ -1,0 +1,12 @@
+evaluation:
+  backend: naive
+  strategy: last_delta
+  horizon: 3
+
+data:
+  test_files:
+    - data/sample_sft/weather_sample.json
+
+output:
+  dir: outputs/demo_eval
+

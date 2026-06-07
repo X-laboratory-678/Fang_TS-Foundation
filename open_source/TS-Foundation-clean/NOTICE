@@ -1,0 +1,11 @@
+TS-Foundation Clean Research Implementation
+
+This repository contains a cleaned research implementation for TS-Foundation, with selected training workflow concepts adapted from open-source training frameworks where applicable.
+
+Third-party attribution:
+
+- LLaMA-Factory: the original internal training workspace was based on modified LLaMA-Factory components. The public version does not vendor the full LLaMA-Factory project. It preserves the relevant SFT/DPO data conventions and PEFT-style configuration surface, and documents this relationship for attribution.
+- Hugging Face Transformers, PEFT, TRL, and Datasets: optional dependencies used only when running full SFT/DPO training rather than the default dry-run demos.
+
+No model weights, checkpoints, logs, caches, full private datasets, or machine-specific paths are included.
+

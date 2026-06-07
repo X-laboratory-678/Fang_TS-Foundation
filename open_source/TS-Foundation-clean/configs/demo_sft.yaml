@@ -1,0 +1,33 @@
+stage: sft
+dry_run: true
+
+model:
+  name_or_path: local-or-huggingface-base-model
+  template: llama3
+
+data:
+  train_files:
+    - data/sample_sft/energy_sample.json
+    - data/sample_sft/finance_sample.json
+    - data/sample_sft/weather_sample.json
+  history_length: 12
+  horizon: 3
+
+peft:
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  target: all
+
+training:
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 1
+  learning_rate: 5.0e-5
+  num_train_epochs: 1
+  logging_steps: 1
+  save_steps: 20
+  save_total_limit: 1
+
+output:
+  dir: outputs/demo_sft
+

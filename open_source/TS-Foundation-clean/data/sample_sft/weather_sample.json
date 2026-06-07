@@ -1,0 +1,13 @@
+[
+  {
+    "instruction": "As a weather forecaster, use a history window of 12 temperature values sampled every hour to predict the next 3 values. Return only a numeric list rounded to two decimals.",
+    "input": "[18.20, 18.50, 18.90, 19.10, 19.40, 19.80, 20.10, 20.30, 20.60, 20.90, 21.10, 21.40]",
+    "output": "[21.70, 22.00, 22.30]"
+  },
+  {
+    "instruction": "As a weather forecaster, use a history window of 12 temperature values sampled every hour to predict the next 3 values. Return only a numeric list rounded to two decimals.",
+    "input": "[12.00, 12.20, 12.50, 12.70, 13.00, 13.20, 13.50, 13.70, 14.00, 14.30, 14.50, 14.80]",
+    "output": "[15.10, 15.40, 15.70]"
+  }
+]
+

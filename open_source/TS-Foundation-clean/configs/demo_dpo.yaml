@@ -1,0 +1,36 @@
+stage: dpo
+dry_run: true
+
+model:
+  name_or_path: local-or-huggingface-sft-checkpoint
+  reference_name_or_path: local-or-huggingface-sft-checkpoint
+  template: llama3
+
+data:
+  train_files:
+    - data/sample_dpo/target_domain_dpo_sample.json
+  history_length: 12
+  horizon: 3
+
+peft:
+  rank: 32
+  alpha: 64
+  dropout: 0.05
+  target: all
+
+dpo:
+  beta: 0.1
+  loss: sigmoid
+
+training:
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 1
+  learning_rate: 1.0e-5
+  num_train_epochs: 1
+  logging_steps: 1
+  save_steps: 20
+  save_total_limit: 1
+
+output:
+  dir: outputs/demo_dpo
+

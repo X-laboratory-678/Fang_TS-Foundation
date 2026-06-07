@@ -1,0 +1,11 @@
+PyYAML>=6.0
+pytest>=7.0
+
+# Optional packages for non-dry-run SFT/DPO training:
+# torch>=2.1
+# transformers>=4.41
+# datasets>=2.18
+# peft>=0.10
+# trl>=0.8
+# accelerate>=0.29
+
