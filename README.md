@@ -1,214 +1,206 @@
 # TS-Foundation
-A unified large language model framework for cross-domain hybrid time-series forecasting.
 
-<div align="center">
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Package](https://img.shields.io/badge/package-tsfoundation-green.svg)](pyproject.toml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-clean%20research%20release-orange.svg)](#clean-release-scope)
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+TS-Foundation is a clean research implementation for instruction-based time-series forecasting. It reformulates forecasting as an instruction-following problem: historical numeric observations are serialized as text, the instruction describes the domain and prediction horizon, and the model produces the future sequence.
 
-</div>
+The repository focuses on a two-stage workflow:
 
-## Overview
+1. Mixed-domain supervised fine-tuning (SFT) with `instruction`, `input`, and `output` records.
+2. Target-domain preference alignment with direct preference optimization (DPO) using `instruction`, `input`, `chosen`, and `rejected` records.
 
-TS-Foundation is a unified large-model framework for cross-domain time-series forecasting.  
-Instead of training a separate model for each dataset or domain, TS-Foundation formulates heterogeneous forecasting problems under a shared instruction-driven interface and optimizes a single forecasting backbone across multiple temporal regimes.
+This public version is designed for code inspection, format verification, dry-run demos, and adaptation to authorized datasets. It does not include large model weights, checkpoints, caches, logs, full private datasets, or machine-specific paths.
 
-The framework is designed to handle heterogeneous time-series data from different domains, such as energy, finance, and weather, within one unified modeling pipeline. It further supports target-domain refinement through preference alignment, enabling the shared backbone to retain broad cross-domain generalization while achieving domain-specific improvement when necessary.
+## Why TS-Foundation
 
----
+Time-series forecasting systems often become domain-specific pipelines: one model for energy, another for finance, another for weather, and so on. TS-Foundation instead uses a unified instruction interface so heterogeneous forecasting tasks can share the same language-model training pipeline.
 
-## Key Features
+The key idea is simple:
 
-- **Unified cross-domain forecasting interface**  
-  Heterogeneous time-series tasks are converted into a shared instruction-based representation, allowing a single model to process multiple forecasting scenarios.
+- Treat each forecasting task as a text instruction plus serialized time-series evidence.
+- Mix multiple domains during SFT to learn transferable forecasting behavior.
+- Use target-domain DPO to prefer outputs that are more useful for the downstream domain.
+- Keep data formats explicit so new domains can be added without changing model code.
 
-- **Mixed-domain supervised training**  
-  A unified forecasting backbone is first trained on mixed-domain data to learn transferable temporal patterns across domains.
+## Clean Release Scope
 
-- **Task-sensitive fast adaptation**  
-  A lightweight task-adaptive mechanism is introduced to improve adaptation efficiency under low-resource or newly introduced target domains.
+This repository contains a lightweight, reproducible version of the research workflow:
 
-- **Temporal-aware dynamic regularization**  
-  The training pipeline incorporates time-aware dynamic regularization to mitigate overfitting and improve robustness under heterogeneous temporal regimes.
+- Synthetic sample SFT and DPO data.
+- Data loaders and serialization utilities.
+- Dry-run SFT and DPO pipelines that validate data and build training records.
+- Optional hooks for full Hugging Face, PEFT, TRL, and Datasets based training.
+- Deterministic evaluation utilities for quick local verification.
+- Unit tests for dataset parsing, metrics, and output format handling.
 
-- **Target-domain DPO alignment for regression**  
-  After mixed-domain supervised fine-tuning, the model can be further refined on a selected target domain via preference-based alignment, improving domain-specific forecasting quality without rebuilding the backbone.
+The default demos do not load a large language model. They are intentionally CPU-friendly sanity checks.
 
-- **PEFT- and quantization-friendly design**  
-  The framework is compatible with efficient fine-tuning strategies such as LoRA/PEFT and can be deployed under resource-constrained settings.
+## Repository Layout
 
----
-
-## Motivation
-
-Most existing time-series forecasting methods are developed in a domain-specific manner.  
-They often require separate architectures, hyperparameter tuning strategies, and retraining procedures for different datasets. Such a fragmented paradigm limits scalability, increases deployment complexity, and weakens transferability across domains.
-
-TS-Foundation addresses this problem by introducing a unified large-model paradigm for forecasting. The central idea is simple:
-
-1. **learn a shared forecasting backbone from mixed-domain supervision**, and then  
-2. **refine the model toward a target domain when deeper specialization is needed**.
-
-This design allows the model to first obtain **breadth** through cross-domain learning and then gain **depth** through target-domain preference alignment.
-
----
-
-## Framework
-
-The full pipeline consists of two stages:
-
-### Stage 1: Mixed-domain supervised forecasting
-
-In the first stage, heterogeneous time-series datasets are serialized into a shared instruction-driven format.  
-The model is trained under a common supervised objective across mixed domains, enabling it to learn reusable temporal representations and general forecasting behavior.
-
-### Stage 2: Target-domain preference alignment
-
-In the second stage, the pretrained shared backbone is further refined on a selected target domain using preference pairs constructed from chosen and rejected forecasting trajectories.  
-This stage improves target-domain regression quality while preserving the unified modeling framework.
-
----
-
-## Method Highlights
-
-### 1. Unified instruction-based forecasting interface
-All datasets are reformulated into a common input-output structure.  
-This eliminates the need for domain-specific heads or dataset-specific model redesign.
-
-### 2. Shared forecasting backbone
-A single backbone is used to process diverse temporal signals.  
-This supports unified training, simplified deployment, and transferable representation learning.
-
-### 3. Task-sensitive fast adaptation
-To improve adaptation under domain shift, limited samples, or emerging tasks, we introduce a lightweight task-sensitive adaptation mechanism that can be efficiently combined with PEFT-style optimization.
-
-### 4. Temporal-aware dynamic regularization
-A time-aware regularization strategy is adopted during training to stabilize optimization across heterogeneous temporal dynamics and improve robustness under noisy or complex regimes.
-
-### 5. Target-domain DPO alignment
-To further improve domain-specific performance, we formulate regression refinement as a preference alignment problem.  
-This allows the shared model to better capture target-domain forecasting preferences after mixed-domain training.
-
----
-
-## Why This Repository
-
-This repository is intended to provide:
-
-- a **unified benchmark-oriented implementation** for cross-domain forecasting;
-- an extensible **large-model training pipeline** for mixed-domain supervised learning;
-- an efficient **target-domain refinement strategy** based on preference alignment;
-- a practical framework for studying **generalization, robustness, and specialization** in time-series foundation models.
-
----
-
-## Experimental Scope
-
-The model is designed to support the following evaluation settings:
-
-- **overall performance on cross-domain mixed forecasting**
-- **generalization across heterogeneous domains**
-- **ablation study on task-sensitive adaptation and temporal-aware regularization**
-- **domain-specific improvement via DPO alignment**
-- **robustness under noisy, missing, or limited-data settings**
-- **qualitative visualization of representative forecasting cases**
-
----
-
-## Repository Structure
-
-```bash
-TS-Foundation/
-├── data/                   # datasets or dataset preprocessing scripts
-├── configs/                # training and evaluation configurations
-├── src/
-│   ├── models/             # backbone and model modules
-│   ├── data/               # dataset loading and instruction construction
-│   ├── training/           # SFT / DPO / adaptation modules
-│   ├── evaluation/         # metrics and test scripts
-│   └── utils/              # utility functions
-├── scripts/                # runnable shell scripts
-├── checkpoints/            # saved checkpoints (optional)
-├── figures/                # paper figures / visualizations
-├── requirements.txt
-└── README.md
-````
-
----
+```text
+configs/                  Demo configs for SFT, DPO, and evaluation
+data/                     Synthetic sample data and schema notes
+examples/                 Small local usage examples
+scripts/                  Shell entry points for demos and tests
+src/tsfoundation/data/    Dataset loading, collation, and serialization
+src/tsfoundation/training/ SFT, DPO, and PEFT training utilities
+src/tsfoundation/evaluation/ Inference helpers and forecasting metrics
+src/tsfoundation/utils/   Config and IO helpers
+tests/                    Basic dataset, metric, and inference tests
+pyproject.toml            Python package metadata
+requirements.txt          Minimal and optional dependencies
+LICENSE                   Apache-2.0 license
+NOTICE                    Third-party and release-scope notes
+```
 
 ## Installation
 
 ```bash
 git clone https://github.com/X-laboratory-678/Fang_TS-Foundation.git
-cd TS-Foundation
+cd Fang_TS-Foundation
+
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+pip install -e .
 ```
 
----
+For full model fine-tuning, also install the optional dependencies listed in `requirements.txt`, such as `torch`, `transformers`, `datasets`, `peft`, `trl`, and `accelerate`.
 
 ## Quick Start
 
-### 1. Mixed-domain supervised training
+Run the test suite:
 
 ```bash
-python train_sft.py \
-    --config configs/sft.yaml
+bash scripts/run_all_tests.sh
 ```
 
-### 2. Target-domain DPO refinement
+Run the SFT dry-run demo:
 
 ```bash
-python train_dpo.py \
-    --config configs/dpo.yaml
+bash scripts/run_demo_sft.sh
 ```
 
-### 3. Evaluation
+Run the DPO dry-run demo:
 
 ```bash
-python evaluate.py \
-    --config configs/eval.yaml
+bash scripts/run_demo_dpo.sh
 ```
 
----
+Run the evaluation demo:
 
-## Planned Support
+```bash
+bash scripts/run_demo_eval.sh
+```
 
-* [ ] mixed-domain training scripts
-* [ ] target-domain DPO refinement scripts
-* [ ] PEFT / LoRA support
-* [ ] quantized training support
-* [ ] visualization tools for forecasting curves
-* [ ] robustness evaluation under noise and missing values
-* [ ] benchmark configuration files
+The dry-run commands validate data, construct model-ready text records, and write outputs under `outputs/`.
 
----
+## Demo Outputs
 
-## Citation
+After running the demo scripts, the following files are generated:
 
-If you find this repository useful in your research, please cite:
+```text
+outputs/demo_sft/sft_preview.jsonl
+outputs/demo_sft/sft_manifest.json
+outputs/demo_dpo/dpo_preview.jsonl
+outputs/demo_dpo/dpo_manifest.json
+outputs/demo_eval/prediction_results.json
+outputs/demo_eval/evaluation_metrics.json
+```
 
-```bibtex
-@article{Fangxin2026tsfoundation,
-  title={TS-Foundation: A Unified Large Language Model Framework for Cross-Domain Time-Series Forecasting},
-  author={FangXin},
-  journal={Under Review},
-  year={2026}
+These files are useful for checking whether your data has been converted into the expected training or evaluation format before launching expensive model training.
+
+## Data Format
+
+### SFT
+
+SFT data uses Alpaca-style `instruction`, `input`, and `output` fields:
+
+```json
+{
+  "instruction": "As an energy demand forecaster, predict the next 3 values.",
+  "input": "[102.4, 105.1, 103.8, 108.2]",
+  "output": "[109.0, 110.5, 111.2]"
 }
 ```
 
----
+### DPO
+
+DPO data uses `instruction`, `input`, `chosen`, and `rejected` fields:
+
+```json
+{
+  "instruction": "As a target-domain forecaster, predict the next 3 values.",
+  "input": "[31.1, 31.4, 31.8, 32.0]",
+  "chosen": "[32.2, 32.5, 32.9]",
+  "rejected": "[31.7, 31.8, 31.9]"
+}
+```
+
+The sample files in `data/` are synthetic and intentionally small. Replace them with authorized datasets that follow the same schemas.
+
+## Full Training Workflow
+
+To run real SFT or DPO instead of dry-run validation:
+
+1. Prepare authorized SFT data in the `instruction/input/output` schema.
+2. Edit `configs/demo_sft.yaml` with your data paths, base model path, LoRA settings, learning rate, and output directory.
+3. Set `dry_run: false` in the SFT config.
+4. Run `bash scripts/run_demo_sft.sh`.
+5. Prepare target-domain DPO data in the `instruction/input/chosen/rejected` schema.
+6. Edit `configs/demo_dpo.yaml` with the SFT adapter or checkpoint path.
+7. Set `dry_run: false` in the DPO config.
+8. Run `bash scripts/run_demo_dpo.sh`.
+9. Evaluate with `configs/demo_eval.yaml` or a custom evaluation config.
+
+The full-training path expects valid local model paths and the optional training dependencies.
+
+## Examples
+
+The `examples/` directory contains small Python entry points for local experimentation:
+
+```bash
+PYTHONPATH=src python examples/quick_start.py
+PYTHONPATH=src python examples/predict_from_json.py
+```
+
+Use these examples when you want to inspect serialization and prediction behavior without editing the training scripts.
+
+## Relationship to Upstream Tools
+
+The internal research workspace used a modified LLaMA-Factory-style training environment. This clean release does not vendor the full upstream framework. Instead, it preserves the relevant SFT and DPO data conventions and provides a compact implementation around Hugging Face, PEFT, TRL, and Datasets for optional full training.
+
+See `NOTICE` for release-scope and third-party component notes.
+
+## Notes on Weights and Datasets
+
+No base model weights or trained checkpoints are included. Users must provide their own authorized instruction model and any adapters or checkpoints used for continued training.
+
+Only synthetic samples are included for demonstration. Restricted industrial, commercial, or private datasets should not be committed to the public repository.
+
+## Roadmap
+
+- Add more domain-specific serialization templates.
+- Add richer benchmark reporting utilities.
+- Add additional evaluation backends for model-based inference.
+- Add reproducible experiment configs for public datasets when redistribution permits.
+
+## Citation
+
+If you use this repository, please cite the TS-Foundation project. Replace the placeholder below with the final bibliographic entry when available.
+
+```bibtex
+@article{tsfoundation2026,
+  title = {TS-Foundation: Instruction-Based Time-Series Forecasting},
+  author = {TS-Foundation Authors},
+  year = {2026}
+}
+```
 
 ## License
 
-This project is released under the MIT License.
-
----
-
-## Contact
-
-For questions, suggestions, or collaboration, please open an issue or contact:
-
-* **Name**: FangXin
-* **Email**: fangx6531@gmail.com
-```
+This repository is released under the Apache License 2.0. See `LICENSE` and `NOTICE`.
