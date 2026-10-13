@@ -36,7 +36,8 @@ The independent worktree is `open_source/TS-Foundation-patterns-prep`, branch `p
 ## F. Execution and experiment verification — PARTIAL
 
 - **PASS:** staged Python syntax check (38/38); CLI import/help for prediction and evaluation; temporary validation-format metric check (MAE 0.5, RMSE 0.7071067811865476); temporary preference build reports `synthetic_fallback`; final evaluation rejects invocation without the original lock artifact.
-- **NOT VERIFIED:** model inference, full SFT/DPO, baselines, manuscript metric recomputation, checkpoint loading, external anonymous access to newly staged code, and train/test window independence. These require rights-checked datasets and weights plus exact run identity. No large GPU training was performed.
+- **PASS:** anonymous access to the published release branch was verified with a shallow clone after disabling credential helpers and authorization headers (see H).
+- **NOT VERIFIED:** model inference, full SFT/DPO, baselines, manuscript metric recomputation, checkpoint loading, and train/test window independence. These require rights-checked datasets and weights plus exact run identity. No large GPU training was performed.
 
 ## G. Difference from existing GitHub repository — PARTIAL
 
@@ -46,7 +47,7 @@ Remote main at `23b1b8a` contains a root README and an embedded `open_source/TS-
 
 The public release is on `patterns-real-code-prep-20261012`, based on remote `main` at `23b1b8a24120420b507815d7cd7035c3f13e17fa`. The branch was published through the authenticated `X-laboratory-678` GitHub browser session. GitHub’s repository page showed the branch and its uploaded files. The direct GitHub connector still authenticates as `King166969` with `push: false`, and terminal Git has no HTTPS or SSH credential; neither was used to publish. No force push, history rewrite, pull request, or merge was performed. `main` remains unchanged.
 
-An anonymous shallow clone of the public branch completed with credential helpers and authorization headers disabled. All 52 release paths were present and their content hashes matched the prepared local snapshot. GitHub rendered the branch README. The browser upload created per-directory commits to preserve the repository layout; the initial code upload was 17 commits ahead of `main`. The local work branch now tracks the published branch, and the single-commit audit snapshot is preserved as `patterns-real-code-prep-local-snapshot-20261013`.
+An anonymous shallow clone of the public branch completed with credential helpers and authorization headers disabled. All 52 release paths were present and their content hashes matched the prepared local snapshot. GitHub rendered the branch README. The browser upload created per-directory commits to preserve the repository layout; the initial code upload was 17 commits ahead of `main`, and the branch is now 19 commits ahead after the two post-publication report updates. The local work branch now tracks the published branch; the final local audit snapshot is preserved as `patterns-real-code-final-audit-20261013`.
 
 ## I. Editorial Manager “Original code” text
 
