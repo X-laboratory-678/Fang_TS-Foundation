@@ -1,0 +1,55 @@
+# Base SFT Configuration for Multi-Domain Time Series Prediction
+# Baseline experiment without any innovations
+# Model: Llama3-8B-Instruction
+# Task: Predict next 3 points from 96 historical data points
+
+### Model Configuration
+model_name_or_path: YOUR_AUTHORIZED_LLAMA3_8B_PATH
+stage: sft
+do_train: true
+finetuning_type: lora
+template: llama3
+
+### Dataset Configuration
+# Six domains: sales, finance, temperature, traffic, energy, wind speed
+dataset: "ETTh1_HUFL_sft,ETTh1_HULL_sft,ETTh1_LUFL_sft,ETTh1_LULL_sft,ETTh1_MUFL_sft,ETTh1_MULL_sft,ETTh1_OT_sft"
+dataset_dir: data
+cutoff_len: 1024
+val_size: 0.1
+max_samples: 10000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### LoRA Configuration
+lora_rank: 16
+lora_alpha: 32
+lora_dropout: 0.1
+lora_target: all
+
+### Standard Training Configuration
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 8
+learning_rate: 5.0e-05
+num_train_epochs: 3
+warmup_ratio: 0.1
+weight_decay: 0.05
+max_grad_norm: 1.0
+
+### Learning Rate Schedule
+lr_scheduler_type: cosine
+warmup_steps: 100
+
+### Memory Optimization
+quantization_bit: 8
+gradient_checkpointing: true
+flash_attn: fa2
+fp16: true
+
+### Logging & Saving
+logging_steps: 10
+save_steps: 500
+save_total_limit: 3
+eval_strategy: steps
+eval_steps: 500
+per_device_eval_batch_size: 4
+output_dir: outputs/base_sft_config

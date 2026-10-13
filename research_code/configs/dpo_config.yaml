@@ -1,0 +1,60 @@
+# DPO Configuration for Single Domain Fine-tuning
+# Using the best SFT model from previous experiments
+# Model: Fine-tuned from the best SFT model
+# Task: Preference optimization for single domain prediction
+
+### Model Configuration
+model_name_or_path: YOUR_SFT_CHECKPOINT_PATH
+stage: dpo
+do_train: true
+finetuning_type: lora
+template: llama3
+
+### Dataset Configuration
+# Single domain dataset for DPO training (example: wind speed)
+dataset: ETTh1_HULL_ppo
+dataset_dir: data
+cutoff_len: 1024
+val_size: 0.1
+max_samples: 5000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### LoRA Configuration
+lora_rank: 32  # Increase rank for DPO fine-tuning
+lora_alpha: 64
+lora_dropout: 0.05
+lora_target: all
+
+### DPO Specific Configuration
+pref_beta: 0.1  # Controls the strength of the KL divergence penalty
+pref_loss: sigmoid  # Type of loss function (sigmoid, hinge, etc.)
+pref_ftx: 0  # Whether to include the reference model's log probability
+
+### Training Configuration
+per_device_train_batch_size: 2  # Smaller batch size for DPO
+gradient_accumulation_steps: 16  # Increase to maintain effective batch size
+learning_rate: 1.0e-05  # Lower learning rate for DPO
+num_train_epochs: 2  # Usually fewer epochs for DPO
+warmup_ratio: 0.1
+weight_decay: 0.05
+max_grad_norm: 1.0
+
+### Learning Rate Schedule
+lr_scheduler_type: cosine
+warmup_steps: 50
+
+### Memory Optimization
+quantization_bit: 8
+gradient_checkpointing: true
+flash_attn: fa2
+fp16: true
+
+### Logging & Saving
+logging_steps: 5
+save_steps: 200
+save_total_limit: 3
+eval_strategy: steps
+eval_steps: 200
+per_device_eval_batch_size: 2
+output_dir: outputs/dpo_config

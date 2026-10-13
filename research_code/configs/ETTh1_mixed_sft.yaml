@@ -1,0 +1,77 @@
+# ======================================================================
+# Auto-Generated Training Configuration
+# Universal Adaptive Parameter Optimization Framework
+# ======================================================================
+# Generated: 2025-12-17 20:31:01
+# Framework: Universal Adaptive Parameter Optimization
+# Task: SFT
+# Format: timeseries
+# Datasets: ETTh1_HUFL_sft, ETTh1_HULL_sft, ETTh1_LUFL_sft, ETTh1_LULL_sft, ETTh1_MUFL_sft...
+# Total Samples: 21,000
+# Complexity: 0.711
+# Diversity: 0.035
+# Note (lora): rank=24, alpha=48, dropout=0.05 (complexity=0.71)
+# Note (training): lr=2.0e-05, epochs=3, batch=128
+# Note (memory): quant=8bit, checkpointing=True
+# Note (maml): inner_lr=0.0001, steps=2
+# ======================================================================
+
+# Model Configuration
+model_name_or_path: YOUR_AUTHORIZED_LLAMA3_8B_PATH
+stage: sft
+finetuning_type: lora
+template: llama3
+
+# Dataset Configuration
+dataset: "ETTh1_HUFL_sft,ETTh1_HULL_sft,ETTh1_LUFL_sft,ETTh1_LULL_sft,ETTh1_MUFL_sft,ETTh1_MULL_sft,ETTh1_OT_sft"
+dataset_dir: data
+cutoff_len: 1024
+val_size: 0.1
+
+# LoRA Configuration
+lora_rank: 24
+lora_alpha: 48
+lora_dropout: 0.05
+lora_target: all
+
+# Temporal LoRA (Time Series)
+lora_temporal_dropout: true
+lora_temporal_decay_factor: 0.7
+lora_structured_dropout_prob: 0.15
+lora_adaptive_dropout: true
+
+# Training Configuration
+do_train: true
+learning_rate: 2.0e-05
+num_train_epochs: 3
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 4
+
+# Learning Rate Schedule
+warmup_ratio: 0.1
+weight_decay: 0.05
+max_grad_norm: 1
+lr_scheduler_type: cosine
+
+# Meta-Learning (MAML)
+use_meta_learning: true
+inner_learning_rate: 1.0e-04
+outer_learning_rate: 2.0e-05
+num_inner_steps: 2
+meta_task_batch_size: 1
+support_set_size: 2
+query_set_size: 2
+simplified_maml: true
+use_first_order: true
+
+# Memory Optimization
+quantization_bit: 8
+gradient_checkpointing: true
+flash_attn: fa2
+fp16: true
+
+# Logging & Saving
+logging_steps: 10
+save_steps: 500
+save_total_limit: 3
+output_dir: outputs/ETTh1_mixed_sft

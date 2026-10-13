@@ -1,0 +1,79 @@
+# Full Innovation SFT Configuration for Multi-Domain Time Series Prediction
+# Experiment with both Meta-Learning (MAML) and Temporal-Aware Dropout innovations
+# Model: Llama3-8B-Instruction
+# Task: Predict next 3 points from 96 historical data points
+
+### Model Configuration
+model_name_or_path: YOUR_AUTHORIZED_LLAMA3_8B_PATH
+stage: sft
+do_train: true
+finetuning_type: lora
+template: llama3
+
+### Dataset Configuration
+# Six domains: sales, finance, temperature, traffic, energy, wind speed
+dataset: "ETTh1_HUFL_sft,ETTh1_HULL_sft,ETTh1_LUFL_sft,ETTh1_LULL_sft,ETTh1_MUFL_sft,ETTh1_MULL_sft,ETTh1_OT_sft"
+dataset_dir: data
+cutoff_len: 1024
+val_size: 0.1
+max_samples: 10000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### LoRA Configuration
+lora_rank: 16
+lora_alpha: 32
+lora_dropout: 0.0  # Disable standard dropout
+lora_target: all
+
+### Temporal-Aware LoRA Configuration
+lora_temporal_dropout: true
+lora_sequence_length: 96  # Input sequence length (96 historical points)
+lora_temporal_decay_factor: 0.85  # Higher values preserve more recent timesteps
+lora_structured_dropout_prob: 0.2  # Probability of structured dropout
+lora_adaptive_dropout: true  # Enable adaptive dropout based on sequence variance
+
+### Meta-Learning (MAML) Configuration
+use_meta_learning: true
+inner_learning_rate: 1.0e-04
+outer_learning_rate: 5.0e-05
+num_inner_steps: 2
+# MAML parameters are handled through finetuning_args
+# support_set_size: 2
+# query_set_size: 2
+# simplified_maml: true
+# use_first_order: true
+# clear_cache_per_task: true
+# domain_aware_sampling: true
+
+### Training Configuration
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 8
+learning_rate: 5.0e-05  # Outer loop learning rate is handled by MAML config
+num_train_epochs: 3
+warmup_ratio: 0.1
+weight_decay: 0.05
+max_grad_norm: 1.0
+
+### Learning Rate Schedule
+lr_scheduler_type: cosine
+warmup_steps: 100
+
+### Memory Optimization
+quantization_bit: 8
+gradient_checkpointing: true
+flash_attn: fa2
+fp16: true
+
+### Additional Settings for Time Series
+disable_shuffling: false  # Allow shuffling but preserve temporal order within sequences
+include_effective_tokens_per_second: true
+
+### Logging & Saving
+logging_steps: 10
+save_steps: 500
+save_total_limit: 3
+eval_strategy: steps
+eval_steps: 500
+per_device_eval_batch_size: 4
+output_dir: outputs/full_innovation_sft_config
