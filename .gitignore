@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env*
+outputs/
+saves/
+checkpoints/
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.ckpt
+*.zip
+data/private/
+data/raw/
+maml_debug.txt

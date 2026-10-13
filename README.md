@@ -1,206 +1,93 @@
-# TS-Foundation
+# TS-Foundation: research code release under audit
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Package](https://img.shields.io/badge/package-tsfoundation-green.svg)](pyproject.toml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-clean%20research%20release-orange.svg)](#clean-release-scope)
+## Overview
 
-TS-Foundation is a clean research implementation for instruction-based time-series forecasting. It reformulates forecasting as an instruction-following problem: historical numeric observations are serialized as text, the instruction describes the domain and prediction horizon, and the model produces the future sequence.
+TS-Foundation studies instruction-conditioned forecasting across heterogeneous time series. The submitted manuscript describes a shared mixed-domain supervised fine-tuning (SFT) stage, task-sensitive adaptation, temporal-aware dynamic regularization (TADR), and target-domain direct preference optimization (DPO). This repository includes **selected files copied from the actual local research project**, alongside the earlier synthetic demonstration in `open_source/TS-Foundation-clean/`. The two code paths have distinct provenance and must not be conflated.
 
-The repository focuses on a two-stage workflow:
+This is a **partial research-code release**. The full manuscript result tables have not been reproduced from the included files. See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) and [AUDIT_REPORT.md](AUDIT_REPORT.md) before citing any experiment as independently reproduced.
 
-1. Mixed-domain supervised fine-tuning (SFT) with `instruction`, `input`, and `output` records.
-2. Target-domain preference alignment with direct preference optimization (DPO) using `instruction`, `input`, `chosen`, and `rejected` records.
+## Main contributions represented here
 
-This public version is designed for code inspection, format verification, dry-run demos, and adaptation to authorized datasets. It does not include large model weights, checkpoints, caches, logs, full private datasets, or machine-specific paths.
+- The actual instruction/history/target metadata, parsing, inference, and error utilities used in a local research branch.
+- The actual task sampling, LoRA adaptation, TADR/TTALD controller, trajectory preference construction, and evaluation source from that branch.
+- Historical candidate LLaMA-Factory integration files and SFT/DPO YAML configurations, with provenance and limitations disclosed.
 
-## Why TS-Foundation
+## Repository structure
 
-Time-series forecasting systems often become domain-specific pipelines: one model for energy, another for finance, another for weather, and so on. TS-Foundation instead uses a unified instruction interface so heterogeneous forecasting tasks can share the same language-model training pipeline.
+- `research_code/src/llamafactory/innovations_v2/`: original research modules for task metadata, sampling, adaptation, regularization, generation, and evaluation.
+- `research_code/src/llamafactory/{data,model,train,innovations}/`: selected historical LLaMA-Factory integration files.
+- `research_code/scripts/innovation_v2/`: original data, preference, inference, and evaluation scripts.
+- `research_code/configs/`: historical candidate YAML files with machine paths replaced by explicit placeholders; their parameters have not been changed.
+- `docs/SOURCE_MAP.md`: original relative paths, SHA-256 hashes, and release treatments.
+- `open_source/TS-Foundation-clean/`: pre-existing synthetic demonstration; **not** evidence of manuscript training.
 
-The key idea is simple:
+## Environment requirements and installation
 
-- Treat each forecasting task as a text instruction plus serialized time-series evidence.
-- Mix multiple domains during SFT to learn transferable forecasting behavior.
-- Use target-domain DPO to prefer outputs that are more useful for the downstream domain.
-- Keep data formats explicit so new domains can be added without changing model code.
+The historical project's `publication_v3` environment snapshot identifies Python packages in `research_code/requirements-observed.txt`. That snapshot names a different local editable LLaMA-Factory checkout and is **not** a verified complete environment for the selected manuscript. Model training requires a compatible modified LLaMA-Factory installation, PyTorch/PEFT/TRL, a licensed Meta-Llama-3-8B-Instruct checkpoint, and substantial GPU resources. The exact framework revision and hardware recipe remain unverified.
 
-## Clean Release Scope
-
-This repository contains a lightweight, reproducible version of the research workflow:
-
-- Synthetic sample SFT and DPO data.
-- Data loaders and serialization utilities.
-- Dry-run SFT and DPO pipelines that validate data and build training records.
-- Optional hooks for full Hugging Face, PEFT, TRL, and Datasets based training.
-- Deterministic evaluation utilities for quick local verification.
-- Unit tests for dataset parsing, metrics, and output format handling.
-
-The default demos do not load a large language model. They are intentionally CPU-friendly sanity checks.
-
-## Repository Layout
-
-```text
-configs/                  Demo configs for SFT, DPO, and evaluation
-data/                     Synthetic sample data and schema notes
-examples/                 Small local usage examples
-scripts/                  Shell entry points for demos and tests
-src/tsfoundation/data/    Dataset loading, collation, and serialization
-src/tsfoundation/training/ SFT, DPO, and PEFT training utilities
-src/tsfoundation/evaluation/ Inference helpers and forecasting metrics
-src/tsfoundation/utils/   Config and IO helpers
-tests/                    Basic dataset, metric, and inference tests
-pyproject.toml            Python package metadata
-requirements.txt          Minimal and optional dependencies
-LICENSE                   Apache-2.0 license
-NOTICE                    Third-party and release-scope notes
-```
-
-## Installation
+For low-cost inspection of the copied evaluation modules:
 
 ```bash
-git clone https://github.com/X-laboratory-678/Fang_TS-Foundation.git
-cd Fang_TS-Foundation
-
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-pip install -e .
+python -m pip install numpy torch pyyaml
+PYTHONPATH=research_code/src python research_code/scripts/innovation_v2/evaluate_forecasts.py --help
 ```
 
-For full model fine-tuning, also install the optional dependencies listed in `requirements.txt`, such as `torch`, `transformers`, `datasets`, `peft`, `trl`, and `accelerate`.
+The command above checks the evaluation entry point; it does not reproduce manuscript results. Do not install `requirements-observed.txt` as a guaranteed lock file.
 
-## Quick Start
+## Dataset preparation
 
-Run the test suite:
+The manuscript uses 96 observations to predict three future values. The actual task formatter and metadata parser are in `research_code/src/llamafactory/innovations_v2/metadata/`; original dataset registration and preparation records remain in the private research tree. The release contains no historical training or test records. The script `research_code/scripts/innovation_v2/upgrade_electrical_metadata.py` is an actual metadata utility, but the complete raw-data-to-published-table pipeline has not been validated here.
+
+The [ETT dataset](https://github.com/zhouhaoyi/ETDataset) is available from its originator. The manuscript also identifies Weather, finance, battery, provincial thermal-load, and wind-farm sources; the exact files, versions, access terms, and download URLs for those tasks remain to be confirmed. Obtain data directly from their providers and respect the applicable terms. This release does not claim that its synthetic demo samples were used in the paper.
+
+## Mixed-domain SFT training
+
+`research_code/configs/base_sft_config.yaml`, `full_innovation_sft_config.yaml`, and `ETTh1_mixed_sft.yaml` are real local candidate configurations. The copied `wind_speed.py` processor and trainer files show historical LLaMA-Factory integration. **A verified launch command for the checkpoint used in the selected manuscript has not been identified.** These YAMLs are therefore retained for inspection, not presented as final run configurations. Their LoRA ranks and step counts do not uniformly match the manuscript's Extended Data Table 5.
+
+## Task-sensitive adaptation and TADR
+
+`research_code/src/llamafactory/innovations_v2/tela/` contains the actual task-local LoRA update code. `innovations_v2/ttald/` contains a controller that changes LoRA dropout using temporal and task-loss statistics. Historical `model/temporal_lora.py` and `innovations/meta_learning/maml_trainer.py` provide a different early integration path. The paper writes a position-dependent squared-error regularizer; equivalence between that equation and the copied dropout controller is **not verified**.
+
+## Target-domain DPO training
+
+`research_code/scripts/innovation_v2/build_electrical_preferences.py` is the original preference-pair builder. It can use a model checkpoint, but when no checkpoint is provided or too few outputs parse, it uses a **synthetic fallback around the true targets**. Historical local preference manifests record this fallback. The copied LLaMA-Factory `train/dpo/trainer.py` contains DPO loss/reference-model logic, and `research_code/configs/dpo_config.yaml` is a historical candidate configuration. The exact DPO checkpoint and reference model for every manuscript table remain unverified; no full DPO training command is claimed here.
+
+## Forecasting inference
+
+`research_code/scripts/innovation_v2/predict_forecasts.py` is the actual model-based inference script and requires an authorized model checkpoint plus prepared task JSON. Its CLI can be inspected with:
 
 ```bash
-bash scripts/run_all_tests.sh
+PYTHONPATH=research_code/src python research_code/scripts/innovation_v2/predict_forecasts.py --help
 ```
 
-Run the SFT dry-run demo:
+Model inference has not been executed in this release audit because the corresponding authorized checkpoint was not established. `--mode final` is gated by the original project's final-configuration artifact; no test result is reconstructed here.
+Inspecting this inference CLI additionally requires compatible `transformers` and `peft` installations.
+
+## Evaluation and reproducibility
+
+The original evaluation entry point is `research_code/scripts/innovation_v2/evaluate_forecasts.py`. Given a JSONL prediction file from the same pipeline, it can be run as follows:
 
 ```bash
-bash scripts/run_demo_sft.sh
+PYTHONPATH=research_code/src python research_code/scripts/innovation_v2/evaluate_forecasts.py \
+  --predictions /path/to/validation_predictions.jsonl \
+  --output /path/to/evaluation_metrics.json \
+  --mode development
 ```
 
-Run the DPO dry-run demo:
+The command was checked on temporary **format-only** records; it is not a manuscript benchmark. Parsed outputs are scored with MAE and RMSE; unparsable outputs are counted separately and excluded from these error averages. A failed-parse policy matching the paper's narrative is not established. See [REPRODUCIBILITY.md](REPRODUCIBILITY.md) for the precise verification boundary.
 
-```bash
-bash scripts/run_demo_dpo.sh
-```
+## Experimental configuration
 
-Run the evaluation demo:
+The selected manuscript reports a 96-to-3 forecast protocol, Meta-Llama-3-8B-Instruct, and Extended Data Table 5 training defaults. The copied candidate configs contain different settings in places; they are not silently adjusted to match the paper. Original versus release-file hashes and path-only changes are in `docs/SOURCE_MAP.md`.
 
-```bash
-bash scripts/run_demo_eval.sh
-```
+## Data and code availability
 
-The dry-run commands validate data, construct model-ready text records, and write outputs under `outputs/`.
+This checkout contains original research code in `research_code/` and a separate earlier synthetic demonstration in `open_source/TS-Foundation-clean/`. The research-code subset does not by itself reproduce the complete paper. ETT has a public source linked above; other data access routes and weights need separate verification. Meta-Llama-3-8B-Instruct weights and trained adapters are not included.
 
-## Demo Outputs
+## Limitations and unavailable resources
 
-After running the demo scripts, the following files are generated:
+The exact submitted-manuscript training revision, complete run configs/logs, some dataset source versions and permissions, checkpoints, and table-generation chain have not been authenticated. A local research environment snapshot exists but is from a later experiment branch. Consequently this release supports source inspection and limited functional checks, **not full reproduction of the reported tables**. The existing Git history also contains unrelated data-center task JSON from an earlier upload. The author confirmed public-release permission for those two existing files on 2026-10-13; they are not part of the TS-Foundation research-code package and were not changed by this release.
 
-```text
-outputs/demo_sft/sft_preview.jsonl
-outputs/demo_sft/sft_manifest.json
-outputs/demo_dpo/dpo_preview.jsonl
-outputs/demo_dpo/dpo_manifest.json
-outputs/demo_eval/prediction_results.json
-outputs/demo_eval/evaluation_metrics.json
-```
-
-These files are useful for checking whether your data has been converted into the expected training or evaluation format before launching expensive model training.
-
-## Data Format
-
-### SFT
-
-SFT data uses Alpaca-style `instruction`, `input`, and `output` fields:
-
-```json
-{
-  "instruction": "As an energy demand forecaster, predict the next 3 values.",
-  "input": "[102.4, 105.1, 103.8, 108.2]",
-  "output": "[109.0, 110.5, 111.2]"
-}
-```
-
-### DPO
-
-DPO data uses `instruction`, `input`, `chosen`, and `rejected` fields:
-
-```json
-{
-  "instruction": "As a target-domain forecaster, predict the next 3 values.",
-  "input": "[31.1, 31.4, 31.8, 32.0]",
-  "chosen": "[32.2, 32.5, 32.9]",
-  "rejected": "[31.7, 31.8, 31.9]"
-}
-```
-
-The sample files in `data/` are synthetic and intentionally small. Replace them with authorized datasets that follow the same schemas.
-
-## Full Training Workflow
-
-To run real SFT or DPO instead of dry-run validation:
-
-1. Prepare authorized SFT data in the `instruction/input/output` schema.
-2. Edit `configs/demo_sft.yaml` with your data paths, base model path, LoRA settings, learning rate, and output directory.
-3. Set `dry_run: false` in the SFT config.
-4. Run `bash scripts/run_demo_sft.sh`.
-5. Prepare target-domain DPO data in the `instruction/input/chosen/rejected` schema.
-6. Edit `configs/demo_dpo.yaml` with the SFT adapter or checkpoint path.
-7. Set `dry_run: false` in the DPO config.
-8. Run `bash scripts/run_demo_dpo.sh`.
-9. Evaluate with `configs/demo_eval.yaml` or a custom evaluation config.
-
-The full-training path expects valid local model paths and the optional training dependencies.
-
-## Examples
-
-The `examples/` directory contains small Python entry points for local experimentation:
-
-```bash
-PYTHONPATH=src python examples/quick_start.py
-PYTHONPATH=src python examples/predict_from_json.py
-```
-
-Use these examples when you want to inspect serialization and prediction behavior without editing the training scripts.
-
-## Relationship to Upstream Tools
-
-The internal research workspace used a modified LLaMA-Factory-style training environment. This clean release does not vendor the full upstream framework. Instead, it preserves the relevant SFT and DPO data conventions and provides a compact implementation around Hugging Face, PEFT, TRL, and Datasets for optional full training.
-
-See `NOTICE` for release-scope and third-party component notes.
-
-## Notes on Weights and Datasets
-
-No base model weights or trained checkpoints are included. Users must provide their own authorized instruction model and any adapters or checkpoints used for continued training.
-
-Only synthetic samples are included for demonstration. Restricted industrial, commercial, or private datasets should not be committed to the public repository.
-
-## Roadmap
-
-- Add more domain-specific serialization templates.
-- Add richer benchmark reporting utilities.
-- Add additional evaluation backends for model-based inference.
-- Add reproducible experiment configs for public datasets when redistribution permits.
-
-## Citation
-
-If you use this repository, please cite the TS-Foundation project. Replace the placeholder below with the final bibliographic entry when available.
-
-```bibtex
-@article{tsfoundation2026,
-  title = {TS-Foundation: Instruction-Based Time-Series Forecasting},
-  author = {TS-Foundation Authors},
-  year = {2026}
-}
-```
-
-## License
-
-This repository is released under the Apache License 2.0. See `LICENSE` and `NOTICE`.
+The root repository's earlier demo remains available for format checks only. Its dry runs and synthetic outputs must not be cited as validation of the manuscript.
