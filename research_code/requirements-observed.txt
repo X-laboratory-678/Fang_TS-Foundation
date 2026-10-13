@@ -1,0 +1,16 @@
+# Selected packages from the real project's publication_v3/environment/pip_freeze.txt.
+# This is historical evidence, not a tested complete environment lock for the selected manuscript.
+accelerate==1.11.0
+bitsandbytes==0.48.2
+datasets==4.0.0
+numpy==1.26.4
+pandas==2.3.3
+peft==0.17.1
+PyYAML==6.0.3
+safetensors==0.5.3
+scikit-learn==1.7.2
+sentencepiece==0.2.1
+tokenizers==0.22.1
+torch==2.9.1
+transformers==4.56.2
+trl==0.9.6
