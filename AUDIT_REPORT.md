@@ -1,6 +1,6 @@
-# TS-Foundation real-code audit and pre-publication report
+# TS-Foundation real-code audit and publication report
 
-Audit date: 2026-10-13 (Asia/Shanghai). **At the time of this audit update, no research-code push, PR, merge, or large GPU training has occurred.** This report concerns the manuscript identified by the author as `SN_LLM_FX_2026 (9).pdf`. Status terms: **PASS** = real evidence plus verification; **PARTIAL** = some evidence with named limits; **FAIL** = noncompliance or contradiction; **NOT VERIFIED** = not established.
+Audit date: 2026-10-13 (Asia/Shanghai). This report includes a post-publication status update; no large GPU training was started. It concerns the manuscript identified by the author as `SN_LLM_FX_2026 (9).pdf`. Status terms: **PASS** = real evidence plus verification; **PARTIAL** = some evidence with named limits; **FAIL** = noncompliance or contradiction; **NOT VERIFIED** = not established.
 
 ## A. Local project identification — PARTIAL
 
@@ -40,25 +40,23 @@ The independent worktree is `open_source/TS-Foundation-patterns-prep`, branch `p
 
 ## G. Difference from existing GitHub repository — PARTIAL
 
-Remote main at `23b1b8a` contains a root README and an embedded `open_source/TS-Foundation-clean` demo; its README explicitly describes synthetic examples and dry runs. The candidate adds original-file snapshots and audit documentation without deleting existing files. `git diff --stat` and the final staged-file manifest should be reviewed immediately before any publication authorization. The separate local demo checkout has a pre-existing modified README and older `main`; it remains untouched.
+Remote main at `23b1b8a` contains a root README and an embedded `open_source/TS-Foundation-clean` demo; its README explicitly describes synthetic examples and dry runs. The candidate adds original-file snapshots and audit documentation without deleting existing files. The separate local demo checkout has a pre-existing modified README and older `main`; it remains untouched.
 
-## H. Git state — PASS for preparation; push channel PARTIAL
+## H. Git state — PASS for branch publication; PARTIAL for direct Git credentials
 
-Git 2.34.1 is installed; remote reads and a fresh clone succeeded. `gh` is not installed. The author authenticated in the browser as `X-laboratory-678` and saved the ChatGPT Codex Connector installation for this repository only; GitHub displayed the updated-installation confirmation and two selected repositories. The connector metadata call was unavailable during this update, and terminal Git still has no HTTPS credential. Local branch: `patterns-real-code-prep-20261012`. At the time of this audit update, the package is local only and has no release commit. The remote history was not rewritten and no force push is planned.
+The public release is on `patterns-real-code-prep-20261012`, based on remote `main` at `23b1b8a24120420b507815d7cd7035c3f13e17fa`. The branch was published through the authenticated `X-laboratory-678` GitHub browser session. GitHub’s repository page showed the branch and its uploaded files. The direct GitHub connector still authenticates as `King166969` with `push: false`, and terminal Git has no HTTPS or SSH credential; neither was used to publish. No force push, history rewrite, pull request, or merge was performed. `main` remains unchanged.
+
+An anonymous shallow clone of the public branch completed with credential helpers and authorization headers disabled. All 52 release paths were present and their content hashes matched the prepared local snapshot. GitHub rendered the branch README. The browser upload created per-directory commits to preserve the repository layout; the initial code upload was 17 commits ahead of `main`. The local work branch now tracks the published branch, and the single-commit audit snapshot is preserved as `patterns-real-code-prep-local-snapshot-20261013`.
 
 ## I. Editorial Manager “Original code” text
 
-**Use only after publication and anonymous-access verification:**
+> Selected original TS-Foundation research code, candidate training configurations, and supporting source maps and reproducibility notes are openly accessible without registration at https://github.com/X-laboratory-678/Fang_TS-Foundation/tree/patterns-real-code-prep-20261012. This is a partial research-code release: the exact manuscript training revision, complete result-producing configuration/checkpoint chain, and some dataset access terms have not been authenticated. Model weights and restricted datasets are not included. The earlier synthetic demonstration in the repository is identified separately and is not presented as evidence that the manuscript experiments were reproduced. Please see the branch README, AUDIT_REPORT.md, and REPRODUCIBILITY.md for the implementation mapping and verification limits.
 
-> The original TS-Foundation research code for task construction, mixed-domain forecasting components, task-sensitive adaptation, temporal-aware regularization, target-domain preference construction, inference, and evaluation is available without registration at https://github.com/X-laboratory-678/Fang_TS-Foundation. The repository provides source provenance, execution instructions, and a reproducibility inventory. Model weights and datasets governed by third-party access or redistribution terms are not included; the repository identifies these limitations and the available source routes. The release does not claim that its synthetic demonstration reproduces the manuscript results.
+## J. Outstanding issues that can affect review — PARTIAL / NOT VERIFIED
 
-**Current state:** do **not** submit the paragraph above as a claim of completed code release. The public repository currently provides only the earlier demo; the new research-code package has not been pushed or anonymously verified.
-
-## J. Outstanding issues that can affect review — FAIL / NOT VERIFIED
-
-1. Resolve the selected-PDF title/page-reference discrepancy and the currently inaccurate public-code availability statement.
-2. Confirm the exact manuscript run configs, checkpoint/reference-model identity, raw prediction outputs, and table-generation chain; disclose or correct all mismatches without changing historical results.
-3. Audit provider permissions for every dataset and clarify historical synthetic-fallback preference construction.
-4. Establish temporal split and scaler-fit independence; distinguish development validation from untouched test claims.
-5. The author confirmed public-release permission for the unrelated data-center JSON already in public history; its common PII/credential pattern scan was clean. Do not force-push or silently rewrite that history.
-6. Verify anonymous download and displayed README only after an authorized push.
+1. Confirm the selected PDF’s title and page-reference discrepancy, and update the manuscript’s availability text to point to the release branch rather than the unchanged default branch.
+2. Authenticate the exact manuscript run configurations, checkpoint/reference-model identity, raw predictions, and table-generation chain; do not substitute new results for historical values.
+3. Verify provider permissions and exact versions for datasets and model weights; the unverified assets remain excluded. Clarify the recorded synthetic-fallback preference construction.
+4. Establish timestamp-level split isolation and scaler-fit independence, and distinguish development validation from untouched-test evidence.
+5. Resolve the method-to-code gap between the manuscript’s position-dependent squared-error regularizer and the copied temporal/task-conditioned dropout controller.
+6. Reconcile invalid-response handling and metric denominators with the manuscript’s description.
